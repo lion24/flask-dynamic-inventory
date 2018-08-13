@@ -1,24 +1,23 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from app.resources.home import HomeResource
+from app.resources.host import HostResource
 
-db = SQLAlchemy()
-api = Api()
 
-
-def create_app(config_file=None):
+def create_app(config_file=None, testing=False):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile(config_file)
-    initialize_extensions(app)
-    register_api_resources(app)
-    return app
+    app.testing = testing
 
+    # TODO: This api stuff needs to be refactored somewhere else without
+    # breaking tests
+    # https://github.com/flask-restful/flask-restful/issues/357
+    api = Api()
+    api.add_resource(HomeResource, '/', '/home', '/index')
+    api.add_resource(HostResource, '/hosts')
 
-def initialize_extensions(app):
+    from app.database import db
     db.init_app(app)
+
     api.init_app(app)
-
-
-def register_api_resources(app):
-    from app.resources.host import Host
-    api.add_resource(Host, "/hosts")
+    return app

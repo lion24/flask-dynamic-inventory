@@ -1,4 +1,7 @@
 *.py[cod]
+**/*.db
 **/*cache*
 **/__pycache__
+**/*egg-info
+.tox/
 .vscode/

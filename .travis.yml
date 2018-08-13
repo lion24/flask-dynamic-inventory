@@ -1,0 +1,19 @@
+language: python
+
+addon:
+  apt:
+    update: true
+    packages:
+      - pip
+
+python:
+  - "3.6"
+
+before_script:
+  - pip install tox tox-travis coveralls
+
+script:
+  - tox
+
+after_success:
+  - coveralls
